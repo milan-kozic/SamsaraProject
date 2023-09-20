@@ -2,8 +2,7 @@ package utils;
 
 import org.testng.Assert;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class PropertiesUtils {
@@ -16,6 +15,8 @@ public class PropertiesUtils {
         InputStream inputStream = PropertiesUtils.class.getClassLoader().getResourceAsStream(sFilePath);
         Properties properties = new Properties();
         try {
+            //File initialFile = new File("src/main/resources/test.properties");
+            //InputStream inputStream = new FileInputStream(initialFile);
             properties.load(inputStream);
         } catch (IOException e) {
             Assert.fail("Cannot load '" + sFilePath + "' file! Message: " + e.getMessage());
@@ -82,7 +83,7 @@ public class PropertiesUtils {
     }
 
     public static String getBrowser() {
-        String sBrowser = getProperty("browser");
+        String sBrowser = getProperty("browser").toLowerCase();
         return sBrowser;
     }
 
@@ -104,9 +105,11 @@ public class PropertiesUtils {
         return bRemote;
     }
 
+    public static String getHubUrl() {
+        return getProperty("hubUrl");
+    }
 
-
-
-
-
+    public static String getDriversFolder() {
+        return getProperty("driversFolder");
+    }
 }

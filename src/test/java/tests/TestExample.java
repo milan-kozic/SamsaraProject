@@ -1,18 +1,15 @@
 package tests;
 
+import data.CommonStrings;
 import data.Groups;
-import org.openqa.selenium.By;
+import data.Time;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.LoginPage;
+import pages.WelcomePage;
 import utils.DateTimeUtils;
-import utils.PropertiesUtils;
 import utils.WebDriverUtils;
-
-import java.time.Duration;
 
 @Test (groups={Groups.REGRESSION})
 public class TestExample {
@@ -21,53 +18,45 @@ public class TestExample {
     public void testSuccessfulLoginLogout() {
 
         WebDriver driver = null;
+
+        String sUsername = "user";
+        String sPassword = "password";
+        String sExpectedSuccessMessage = CommonStrings.LOGOUT_SUCCESS_MESSAGE;
+
         try {
 
             driver = WebDriverUtils.setUpDriver();
 
-            String sLoginUrl = PropertiesUtils.getBaseUrl() + "/login";
-            driver.get(sLoginUrl);
-            DateTimeUtils.wait(1);
-
             // Implicit Wait, Explicit Wait
 
-            WebElement usernameTextField = driver.findElement(By.id("username"));
-            usernameTextField.sendKeys("user");
-            DateTimeUtils.wait(1);
+            LoginPage loginPage = new LoginPage(driver);
+            loginPage.open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            WebElement passwordTextField = driver.findElement(By.id("password"));
-            passwordTextField.sendKeys("password");
-            DateTimeUtils.wait(1);
+            loginPage.typeUsername(sUsername);;
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement loginButton = wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[contains(@class, 'btn_primary')]")));
-            //WebElement loginButton = driver.findElement(By.xpath("//input[contains(@class, 'btn-primary')]"));
+            loginPage.typePassword(sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(5));
-            loginButton = wait2.until(ExpectedConditions.elementToBeClickable(loginButton));
+            //String sLoginButtonTitle = loginPage.getLoginButtonTitle();
+            //System.out.println("Login Button Title: " + sLoginButtonTitle);
 
-            loginButton.click();
-            DateTimeUtils.wait(1);
-            //driver.findElement(By.cssSelector("input.btn-primary")).click();
+            loginPage.clickLoginButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            //String sActualUrl = driver.getCurrentUrl();
-            //String sExpectedUrl = "http://18.219.75.209:8080/";
+            WelcomePage welcomePage = new WelcomePage(driver);
+            //String sWelcomePageTitle = welcomePage.getPageTitle();
+            //System.out.println("Page Title: " + sWelcomePageTitle);
 
+            welcomePage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            //Assert.assertEquals(sActualUrl, sExpectedUrl, "Wrong Url!");
+            Assert.assertTrue(loginPage.isSuccessMessageDisplayed(), "Success Message is NOT displayed!");
 
-            String sActualText = driver.findElement(By.xpath("//div[contains(@class,'panel-title')]")).getText();
-            String sExpectedText = "Hello, and welcome to our gamers page!";
-
-            Assert.assertEquals(sActualText, sExpectedText, "Wrong WelcomePage Title!");
-
-            driver.findElement(By.xpath("//a[contains(@href, 'logoutForm')]")).click();
-            DateTimeUtils.wait(1);
-
-            String sActualSuccessMessage = driver.findElement(By.xpath("//div[@id='loginbox']//div[contains(@class, 'alert-success')]")).getText();
-            String sExpectedSuccessMessage = "You have been logged out.";
-
+            String sActualSuccessMessage = loginPage.getSuccessMessage();
             Assert.assertEquals(sActualSuccessMessage, sExpectedSuccessMessage, "Wrong Success Message!");
+
 
         } finally {
             WebDriverUtils.quitDriver(driver);
@@ -77,31 +66,29 @@ public class TestExample {
     @Test
     public void testUnsuccessfulLoginWrongPassword() {
 
-        String sDriverFolder = "C:\\Selenium\\";
-        System.setProperty("webdriver.chrome.driver", sDriverFolder + "chromedriver.exe");
-
         WebDriver driver = null;
+
+        String sUsername = "user";
+        String sPassword = "wrong_password";
+        String sExpectedErrorMessage = CommonStrings.LOGIN_ERROR_MESSAGE;
         try {
 
             driver = WebDriverUtils.setUpDriver();
 
-            String sLoginUrl = PropertiesUtils.getBaseUrl() + "/login";
-            driver.get(sLoginUrl);
-            DateTimeUtils.wait(1);
+            LoginPage loginPage = new LoginPage(driver);
+            loginPage.open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            driver.findElement(By.id("username")).sendKeys("user");
-            DateTimeUtils.wait(1);
+            loginPage.typeUsername(sUsername);;
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            driver.findElement(By.id("password")).sendKeys("12345678");
-            DateTimeUtils.wait(1);
+            loginPage.typePassword(sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            driver.findElement(By.xpath("//input[contains(@class, 'btn-primary')]")).click();
-            DateTimeUtils.wait(1);
-            //driver.findElement(By.cssSelector("input.btn-primary")).click();
+            loginPage.clickLoginButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            String sActualErrorMessage = driver.findElement(By.xpath("//div[@id='loginbox']//div[contains(@class, 'alert-danger')]")).getText();
-            String sExpectedErrorMessage = "Invalid username and/or password.";
-
+            String sActualErrorMessage = loginPage.getErrorMessage();
             Assert.assertEquals(sActualErrorMessage, sExpectedErrorMessage, "Wrong Error Message!");
 
         } finally {

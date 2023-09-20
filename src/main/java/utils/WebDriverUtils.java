@@ -1,5 +1,6 @@
 package utils;
 
+import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -23,13 +24,13 @@ public class WebDriverUtils {
         boolean bRemote = PropertiesUtils.getRemote();
         boolean bHeadless = PropertiesUtils.getHeadless();
 
-        String sHubUrl = "http://localhost:4444";
+        String sHubUrl = PropertiesUtils.getHubUrl();
 
-        String sDriverFolder = "C:\\Selenium\\";
+        String sDriversFolder = PropertiesUtils.getDriversFolder();
 
-        String sPathDriverChrome = sDriverFolder + "chromedriver.exe";
-        String sPathDriverFirefox = sDriverFolder + "geckodriver.exe";
-        String sPathDriverEdge = sDriverFolder = "msedgedriver.exe";
+        String sPathDriverChrome = sDriversFolder + "chromedriver.exe";
+        String sPathDriverFirefox = sDriversFolder + "geckodriver.exe";
+        String sPathDriverEdge = sDriversFolder = "msedgedriver.exe";
 
         try {
             switch (sBrowser) {
@@ -96,7 +97,9 @@ public class WebDriverUtils {
         DateTimeUtils.wait(3);
 
         // Setup Implicit Wait
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Time.IMPLICIT_TIMEOUT));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(Time.PAGE_LOAD_TIMEOUT));
+        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(Time.ASYNC_SCRIPT_TIMEOUT));
 
         // Maximize Browser
         driver.manage().window().maximize();
