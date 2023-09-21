@@ -6,9 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import utils.PropertiesUtils;
 
-public class WelcomePage {
-
-    private WebDriver driver;
+public class WelcomePage extends BasePageClass {
 
     private final String WELCOME_PAGE_URL = PropertiesUtils.getBaseUrl() + PageUrlPaths.WELCOME_PAGE;
 
@@ -16,7 +14,7 @@ public class WelcomePage {
     private final By logoutLinkLocator = By.xpath("//a[contains(@href, 'logoutForm')]");
 
     public WelcomePage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public void open() {
@@ -24,12 +22,14 @@ public class WelcomePage {
     }
 
     public String getPageTitle() {
-        WebElement pageTitle = driver.findElement(pageTitleLocator);
+        log.debug("getPageTitle()");
+        WebElement pageTitle = getWebElement(pageTitleLocator);
         return pageTitle.getText();
     }
 
     public void clickLogOutLink() {
-        WebElement logoutLink = driver.findElement(logoutLinkLocator);
+        log.debug("clickLogOutLink()");
+        WebElement logoutLink = getWebElement(logoutLinkLocator);
         logoutLink.click();
     }
 }

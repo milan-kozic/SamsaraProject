@@ -14,7 +14,7 @@ import org.testng.Assert;
 import java.net.URL;
 import java.time.Duration;
 
-public class WebDriverUtils {
+public class WebDriverUtils extends LoggerUtils {
 
     public static WebDriver setUpDriver() {
 
@@ -24,13 +24,15 @@ public class WebDriverUtils {
         boolean bRemote = PropertiesUtils.getRemote();
         boolean bHeadless = PropertiesUtils.getHeadless();
 
+        log.info("setUpDriver( Browser: " + sBrowser + ", Remote: " + bRemote + ", Headless: " + bHeadless + ")");
+
         String sHubUrl = PropertiesUtils.getHubUrl();
 
         String sDriversFolder = PropertiesUtils.getDriversFolder();
 
         String sPathDriverChrome = sDriversFolder + "chromedriver.exe";
         String sPathDriverFirefox = sDriversFolder + "geckodriver.exe";
-        String sPathDriverEdge = sDriversFolder = "msedgedriver.exe";
+        String sPathDriverEdge = sDriversFolder + "msedgedriver.exe";
 
         try {
             switch (sBrowser) {
@@ -108,6 +110,7 @@ public class WebDriverUtils {
     }
 
     public static void quitDriver(WebDriver driver) {
+        log.debug("quitDriver()");
         if(driver != null) {
             driver.quit();
         }

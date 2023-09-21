@@ -5,7 +5,7 @@ import org.testng.Assert;
 import java.io.*;
 import java.util.Properties;
 
-public class PropertiesUtils {
+public class PropertiesUtils extends LoggerUtils {
 
     private static final String sPropertiesFilePath = "test.properties";
 

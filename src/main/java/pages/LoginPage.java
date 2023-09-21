@@ -6,9 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import utils.PropertiesUtils;
 
-public class LoginPage {
-
-    private WebDriver driver;
+public class LoginPage extends BasePageClass {
 
     private final String LOGIN_PAGE_URL = PropertiesUtils.getBaseUrl() + PageUrlPaths.LOGIN_PAGE;
 
@@ -23,100 +21,105 @@ public class LoginPage {
 
 
     public LoginPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public void open() {
+        log.info("Open LoginPage");
         driver.get(LOGIN_PAGE_URL);
     }
 
     // Basic Selenium Methods
 
     public boolean isUsernameTextFieldDisplayed() {
-        WebElement usernameTextField = driver.findElement(usernameTextFieldLocator);
-        return usernameTextField.isDisplayed();
+        log.debug("isUsernameTextFieldDisplayed()");
+        return isWebElementDisplayed(usernameTextFieldLocator);
     }
 
     public boolean isUsernameTextFieldEnabled() {
-        WebElement usernameTextField = driver.findElement(usernameTextFieldLocator);
+        log.debug("isUsernameTextFieldEnabled()");
+        WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
         return usernameTextField.isEnabled();
     }
 
     public void typeUsername(String sUsername) {
-        WebElement usernameTextField = driver.findElement(usernameTextFieldLocator);
+        log.debug("typeUsername(" + sUsername + ")");
+        WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
         usernameTextField.sendKeys(sUsername);
     }
 
     public String getUsernamePlaceholder() {
-        WebElement usernameTextField = driver.findElement(usernameTextFieldLocator);
+        log.debug("getUsernamePlaceholder()");
+        WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
         return usernameTextField.getAttribute("placeholder");
     }
 
     public boolean isPasswordTextFieldDisplayed() {
-        WebElement passwordTextField = driver.findElement(passwordTextFieldLocator);
-        return passwordTextField.isDisplayed();
+        log.debug("isPasswordTextFieldDisplayed()");
+        return isWebElementDisplayed(passwordTextFieldLocator);
     }
 
     public boolean isPasswordTextFieldEnabled() {
-        WebElement passwordTextField = driver.findElement(passwordTextFieldLocator);
+        WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
         return passwordTextField.isEnabled();
     }
 
     public void typePassword(String sPassword) {
-        WebElement passwordTextField = driver.findElement(passwordTextFieldLocator);
+        log.debug("typePassword(" + sPassword + ")");
+        WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
         passwordTextField.sendKeys(sPassword);
     }
 
     public String getPasswordPlaceholder() {
-        WebElement passwordTextField = driver.findElement(passwordTextFieldLocator);
+        WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
         return passwordTextField.getAttribute("placeholder");
     }
 
     public boolean isLoginButtonDisplayed() {
-        WebElement loginButton = driver.findElement(loginButtonLocator);
-        return loginButton.isDisplayed();
+        return isWebElementDisplayed(loginButtonLocator);
     }
 
     public boolean isLoginButtonEnabled() {
-        WebElement loginButton = driver.findElement(loginButtonLocator);
+        WebElement loginButton = getWebElement(loginButtonLocator);
         return loginButton.isEnabled();
     }
 
     public void clickLoginButton() {
-        WebElement loginButton = driver.findElement(loginButtonLocator);
+        log.debug("clickLoginButton()");
+        WebElement loginButton = getWebElement(loginButtonLocator);
         loginButton.click();
     }
 
     public String getLoginButtonTitle() {
-        WebElement loginButton = driver.findElement(loginButtonLocator);
+        WebElement loginButton = getWebElement(loginButtonLocator);
         return loginButton.getAttribute("value");
     }
 
     public boolean isSuccessMessageDisplayed() {
-        WebElement successMessage = driver.findElement(successMessageLocator);
-        return successMessage.isDisplayed();
+        return isWebElementDisplayed(successMessageLocator);
     }
 
     public String getSuccessMessage() {
-        WebElement successMessage = driver.findElement(successMessageLocator);
+        log.debug("getSuccessMessage()");
+        WebElement successMessage = getWebElement(successMessageLocator);
         return successMessage.getText();
+
     }
 
     public boolean isErrorMessageDisplayed() {
-        WebElement errorMessage = driver.findElement(errorMessageLocator);
-        return errorMessage.isDisplayed();
+        return isWebElementDisplayed(errorMessageLocator);
     }
 
     public String getErrorMessage() {
-        WebElement errorMessage = driver.findElement(errorMessageLocator);
+        log.debug("getErrorMessage()");
+        WebElement errorMessage = getWebElement(errorMessageLocator);
         return errorMessage.getText();
     }
 
     // getUsername()
 
-
-    // Complex Methods
     public void login(String sUsername, String sPassword) {
+        log.info("login(" + sUsername + ", " + sPassword + ")");
         typeUsername(sUsername);
         typePassword(sPassword);
         clickLoginButton();

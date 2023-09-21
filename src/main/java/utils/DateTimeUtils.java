@@ -1,6 +1,6 @@
 package utils;
 
-public class DateTimeUtils {
+public class DateTimeUtils extends LoggerUtils {
 
     public static void wait (int seconds) {
         try {

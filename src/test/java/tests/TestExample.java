@@ -9,14 +9,15 @@ import org.testng.annotations.Test;
 import pages.LoginPage;
 import pages.WelcomePage;
 import utils.DateTimeUtils;
-import utils.WebDriverUtils;
 
 @Test (groups={Groups.REGRESSION})
-public class TestExample {
+public class TestExample extends BaseTestClass {
+
 
     @Test
     public void testSuccessfulLoginLogout() {
 
+        log.info("[START TEST] testSuccessfulLoginLogout()");
         WebDriver driver = null;
 
         String sUsername = "user";
@@ -25,7 +26,7 @@ public class TestExample {
 
         try {
 
-            driver = WebDriverUtils.setUpDriver();
+            driver = setUpDriver();
 
             // Implicit Wait, Explicit Wait
 
@@ -33,7 +34,7 @@ public class TestExample {
             loginPage.open();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.typeUsername(sUsername);;
+            loginPage.typeUsername(sUsername);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             loginPage.typePassword(sPassword);
@@ -59,12 +60,14 @@ public class TestExample {
 
 
         } finally {
-            WebDriverUtils.quitDriver(driver);
+            quitDriver(driver);
         }
     }
 
     @Test
     public void testUnsuccessfulLoginWrongPassword() {
+
+        log.info("[START TEST] testUnsuccessfulLoginWrongPassword()");
 
         WebDriver driver = null;
 
@@ -73,13 +76,16 @@ public class TestExample {
         String sExpectedErrorMessage = CommonStrings.LOGIN_ERROR_MESSAGE;
         try {
 
-            driver = WebDriverUtils.setUpDriver();
+            driver = setUpDriver();
 
             LoginPage loginPage = new LoginPage(driver);
             loginPage.open();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.typeUsername(sUsername);;
+            log.debug("Error Message: " + loginPage.isErrorMessageDisplayed());
+            Assert.assertFalse(loginPage.isErrorMessageDisplayed());
+
+            loginPage.typeUsername(sUsername);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             loginPage.typePassword(sPassword);
@@ -88,11 +94,14 @@ public class TestExample {
             loginPage.clickLoginButton();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
+            log.debug("Error Message: " + loginPage.isErrorMessageDisplayed());
+            Assert.assertTrue(loginPage.isErrorMessageDisplayed());
+
             String sActualErrorMessage = loginPage.getErrorMessage();
             Assert.assertEquals(sActualErrorMessage, sExpectedErrorMessage, "Wrong Error Message!");
 
         } finally {
-            WebDriverUtils.quitDriver(driver);
+            quitDriver(driver);
         }
     }
 }
