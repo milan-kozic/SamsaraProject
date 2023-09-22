@@ -37,6 +37,9 @@ public class TestExample extends BaseTestClass {
             loginPage.typeUsername(sUsername);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
+            String sEnteredUserName = loginPage.getUsername();
+            log.info("USERNAME: " + sEnteredUserName);
+
             loginPage.typePassword(sPassword);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
@@ -86,6 +89,9 @@ public class TestExample extends BaseTestClass {
             Assert.assertFalse(loginPage.isErrorMessageDisplayed());
 
             loginPage.typeUsername(sUsername);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            loginPage.typeUsername("blablablabla");
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             loginPage.typePassword(sPassword);

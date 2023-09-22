@@ -4,6 +4,7 @@ import data.PageUrlPaths;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import utils.PropertiesUtils;
 
 public class LoginPage extends BasePageClass {
@@ -38,20 +39,30 @@ public class LoginPage extends BasePageClass {
 
     public boolean isUsernameTextFieldEnabled() {
         log.debug("isUsernameTextFieldEnabled()");
+        Assert.assertTrue(isUsernameTextFieldDisplayed(), "Username TextField is NOT displayed on LoginPage!");
         WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
-        return usernameTextField.isEnabled();
+        return isWebElementEnabled(usernameTextField);
     }
 
     public void typeUsername(String sUsername) {
         log.debug("typeUsername(" + sUsername + ")");
+        Assert.assertTrue(isUsernameTextFieldEnabled(), "Username TextField is NOT enabled on LoginPage!");
         WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
-        usernameTextField.sendKeys(sUsername);
+        clearAndTypeTextToWebElement(usernameTextField, sUsername);
+    }
+
+    public String getUsername() {
+        log.debug("getUsername()");
+        Assert.assertTrue(isUsernameTextFieldDisplayed(), "Username TextField is NOT displayed on LoginPage!");
+        WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
+        return getValueFromWebElement(usernameTextField);
     }
 
     public String getUsernamePlaceholder() {
         log.debug("getUsernamePlaceholder()");
+        Assert.assertTrue(isUsernameTextFieldDisplayed(), "Username TextField is NOT displayed on LoginPage!");
         WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
-        return usernameTextField.getAttribute("placeholder");
+        return getPlaceholderFromWebElement(usernameTextField);
     }
 
     public boolean isPasswordTextFieldDisplayed() {
@@ -60,39 +71,57 @@ public class LoginPage extends BasePageClass {
     }
 
     public boolean isPasswordTextFieldEnabled() {
+        log.debug("isPasswordTextFieldEnabled()");
+        Assert.assertTrue(isPasswordTextFieldDisplayed(), "Password TextField is NOT displayed on LoginPage!");
         WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
-        return passwordTextField.isEnabled();
+        return isWebElementEnabled(passwordTextField);
     }
 
     public void typePassword(String sPassword) {
         log.debug("typePassword(" + sPassword + ")");
+        Assert.assertTrue(isPasswordTextFieldEnabled(), "Password TextField is NOT enabled on LoginPage!");
         WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
-        passwordTextField.sendKeys(sPassword);
+        clearAndTypeTextToWebElement(passwordTextField, sPassword);
+    }
+
+    public String getPassword() {
+        log.debug("getPassword()");
+        Assert.assertTrue(isPasswordTextFieldDisplayed(), "Password TextField is NOT displayed on LoginPage!");
+        WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
+        return getValueFromWebElement(passwordTextField);
     }
 
     public String getPasswordPlaceholder() {
+        log.debug("getPasswordPlaceholder()");
+        Assert.assertTrue(isPasswordTextFieldDisplayed(), "Password TextField is NOT displayed on LoginPage!");
         WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
-        return passwordTextField.getAttribute("placeholder");
+        return getPlaceholderFromWebElement(passwordTextField);
     }
 
     public boolean isLoginButtonDisplayed() {
+        log.debug("isLoginButtonDisplayed()");
         return isWebElementDisplayed(loginButtonLocator);
     }
 
     public boolean isLoginButtonEnabled() {
+        log.debug("isLoginButtonEnabled()");
+        Assert.assertTrue(isLoginButtonDisplayed(), "Login Button is NOT displayed on LoginPage!");
         WebElement loginButton = getWebElement(loginButtonLocator);
-        return loginButton.isEnabled();
+        return isWebElementEnabled(loginButton);
     }
 
     public void clickLoginButton() {
         log.debug("clickLoginButton()");
+        Assert.assertTrue(isLoginButtonEnabled(), "Login Button is NOT enabled on LoginPage!");
         WebElement loginButton = getWebElement(loginButtonLocator);
-        loginButton.click();
+        clickOnWebElement(loginButton);
     }
 
     public String getLoginButtonTitle() {
+        log.debug("getLoginButtonTitle()");
+        Assert.assertTrue(isLoginButtonDisplayed(), "Login Button is NOT displayed on LoginPage!");
         WebElement loginButton = getWebElement(loginButtonLocator);
-        return loginButton.getAttribute("value");
+        return getValueFromWebElement(loginButton);
     }
 
     public boolean isSuccessMessageDisplayed() {
