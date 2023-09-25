@@ -1,15 +1,15 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.LoggerUtils;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 abstract class BasePageClass extends LoggerUtils {
 
@@ -19,6 +19,44 @@ abstract class BasePageClass extends LoggerUtils {
         this.driver = driver;
     }
 
+    protected void openUrl(String url) {
+        log.trace("openUrl(" + url + ")");
+        driver.get(url);
+    }
+
+    protected String getCurrentUrl() {
+        log.trace("getCurrentUrl()");
+        return driver.getCurrentUrl();
+    }
+
+    private WebDriverWait getWebDriverWait(int timeout) {
+        return new WebDriverWait(driver, Duration.ofSeconds(timeout));
+    }
+
+    protected boolean waitForUrlChange(String url, int timeout) {
+        log.trace("waitForUrlChange(" + url + ", " + timeout + ")");
+        WebDriverWait wait = getWebDriverWait(timeout);
+        return wait.until(ExpectedConditions.urlContains(url));
+    }
+
+    protected boolean waitUntilPageIsReady(int timeout) {
+        log.trace("waitUntilPageIsReady(" + timeout + ")");
+        WebDriverWait wait = getWebDriverWait(timeout);
+        return wait.until(new Function<WebDriver, Boolean>() {
+            public Boolean apply (WebDriver driver) {
+                JavascriptExecutor js = (JavascriptExecutor) driver;
+                String sResult = (String) js.executeScript("return document.readyState");
+                return sResult.equals("complete");
+            }
+        });
+    }
+
+    protected boolean waitForUrlChangeToExactUrl(String url, int timeout) {
+        log.trace("waitForUrlChangeToExactUrl(" + url + ", " + timeout + ")");
+        WebDriverWait wait = getWebDriverWait(timeout);
+        return wait.until(ExpectedConditions.urlToBe(url));
+    }
+
     protected WebElement getWebElement(By locator) {
         log.trace("getWebElement(" + locator + ")");
         return driver.findElement(locator);
@@ -26,13 +64,34 @@ abstract class BasePageClass extends LoggerUtils {
 
     protected WebElement getWebElement(By locator, int timeout) {
         log.trace("getWebElement(" + locator + ", " + timeout + ")");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+        WebDriverWait wait = getWebDriverWait(timeout);
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    protected WebElement getWebElement(By locator, int timeout, int pollingTime) {
+        log.trace("getWebElement(" + locator + ", " + timeout + ", " + pollingTime + ")");
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(timeout))
+                .pollingEvery(Duration.ofSeconds(pollingTime))
+                .ignoring(NoSuchElementException.class)
+                .ignoring(StaleElementReferenceException.class);
+        WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                return driver.findElement(locator);
+            }
+        });
+        return element;
     }
 
     protected List<WebElement> getWebElements(By locator) {
         log.trace("getWebElements(" + locator + ")");
         return driver.findElements(locator);
+    }
+
+    protected WebElement waitForElementToBeClickable(WebElement element, int timeout) {
+        log.trace("waitForElementToBeClickable(" + element + ", " + timeout + ")");
+        WebDriverWait wait = getWebDriverWait(timeout);
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     protected boolean isWebElementDisplayed(By locator) {
@@ -64,6 +123,16 @@ abstract class BasePageClass extends LoggerUtils {
         log.trace("isWebElementEnabled(" + element + ")");
         try {
             return element.isEnabled();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected boolean isWebElementEnabled(WebElement element, int timeout) {
+        log.trace("isWebElementEnabled(" + element + ", " + timeout + ")");
+        try {
+            WebElement webElement = waitForElementToBeClickable(element, timeout);
+            return webElement != null;
         } catch (Exception e) {
             return false;
         }
@@ -115,6 +184,12 @@ abstract class BasePageClass extends LoggerUtils {
     protected void clickOnWebElement(WebElement element) {
         log.trace("clickOnWebElement(" + element + ")");
         element.click();
+    }
+
+    protected void clickOnWebElement(WebElement element, int timeout) {
+        log.trace("clickOnWebElement(" + element + ", " + timeout + ")");
+        WebElement webElement = waitForElementToBeClickable(element, timeout);
+        webElement.click();
     }
 
     protected void clickOnWebElementJS(WebElement element) {

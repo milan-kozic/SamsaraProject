@@ -10,6 +10,8 @@ import pages.LoginPage;
 import pages.WelcomePage;
 import utils.DateTimeUtils;
 
+import java.util.ArrayList;
+
 @Test (groups={Groups.REGRESSION})
 public class TestExample extends BaseTestClass {
 
@@ -27,18 +29,15 @@ public class TestExample extends BaseTestClass {
         try {
 
             driver = setUpDriver();
+            LoginPage loginPage = new LoginPage(driver).open();
 
-            // Implicit Wait, Explicit Wait
-
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.open();
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+            //DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             loginPage.typeUsername(sUsername);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            String sEnteredUserName = loginPage.getUsername();
-            log.info("USERNAME: " + sEnteredUserName);
+//            String sEnteredUserName = loginPage.getUsername();
+//            log.info("USERNAME: " + sEnteredUserName);
 
             loginPage.typePassword(sPassword);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
@@ -46,10 +45,9 @@ public class TestExample extends BaseTestClass {
             //String sLoginButtonTitle = loginPage.getLoginButtonTitle();
             //System.out.println("Login Button Title: " + sLoginButtonTitle);
 
-            loginPage.clickLoginButton();
+            WelcomePage welcomePage = loginPage.clickLoginButton(true);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            WelcomePage welcomePage = new WelcomePage(driver);
             //String sWelcomePageTitle = welcomePage.getPageTitle();
             //System.out.println("Page Title: " + sWelcomePageTitle);
 
@@ -60,7 +58,6 @@ public class TestExample extends BaseTestClass {
 
             String sActualSuccessMessage = loginPage.getSuccessMessage();
             Assert.assertEquals(sActualSuccessMessage, sExpectedSuccessMessage, "Wrong Success Message!");
-
 
         } finally {
             quitDriver(driver);
@@ -81,8 +78,7 @@ public class TestExample extends BaseTestClass {
 
             driver = setUpDriver();
 
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.open();
+            LoginPage loginPage = new LoginPage(driver).open();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             log.debug("Error Message: " + loginPage.isErrorMessageDisplayed());
@@ -91,16 +87,12 @@ public class TestExample extends BaseTestClass {
             loginPage.typeUsername(sUsername);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.typeUsername("blablablabla");
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
-
             loginPage.typePassword(sPassword);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.clickLoginButton();
+            loginPage = loginPage.clickLoginButton(false);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            log.debug("Error Message: " + loginPage.isErrorMessageDisplayed());
             Assert.assertTrue(loginPage.isErrorMessageDisplayed());
 
             String sActualErrorMessage = loginPage.getErrorMessage();

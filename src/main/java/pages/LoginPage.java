@@ -1,6 +1,7 @@
 package pages;
 
 import data.PageUrlPaths;
+import data.Time;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,9 +26,24 @@ public class LoginPage extends BasePageClass {
         super(driver);
     }
 
-    public void open() {
-        log.info("Open LoginPage");
-        driver.get(LOGIN_PAGE_URL);
+    public LoginPage open(boolean bVerify) {
+        log.debug("openLoginPage(" + LOGIN_PAGE_URL + ")");
+        openUrl(LOGIN_PAGE_URL);
+        if(bVerify) {
+            verifyLoginPage();
+        }
+        return this;
+    }
+
+    public LoginPage open() {
+        return open(true);
+    }
+
+    public LoginPage verifyLoginPage() {
+        log.debug("verifyLoginPage()");
+        waitForUrlChange(LOGIN_PAGE_URL, Time.TIME_SHORTER);
+        waitUntilPageIsReady(Time.TIME_SHORT);
+        return this;
     }
 
     // Basic Selenium Methods
@@ -44,11 +60,12 @@ public class LoginPage extends BasePageClass {
         return isWebElementEnabled(usernameTextField);
     }
 
-    public void typeUsername(String sUsername) {
+    public LoginPage typeUsername(String sUsername) {
         log.debug("typeUsername(" + sUsername + ")");
         Assert.assertTrue(isUsernameTextFieldEnabled(), "Username TextField is NOT enabled on LoginPage!");
         WebElement usernameTextField = getWebElement(usernameTextFieldLocator);
         clearAndTypeTextToWebElement(usernameTextField, sUsername);
+        return this;
     }
 
     public String getUsername() {
@@ -77,11 +94,12 @@ public class LoginPage extends BasePageClass {
         return isWebElementEnabled(passwordTextField);
     }
 
-    public void typePassword(String sPassword) {
+    public LoginPage typePassword(String sPassword) {
         log.debug("typePassword(" + sPassword + ")");
         Assert.assertTrue(isPasswordTextFieldEnabled(), "Password TextField is NOT enabled on LoginPage!");
         WebElement passwordTextField = getWebElement(passwordTextFieldLocator);
         clearAndTypeTextToWebElement(passwordTextField, sPassword);
+        return this;
     }
 
     public String getPassword() {
@@ -110,11 +128,43 @@ public class LoginPage extends BasePageClass {
         return isWebElementEnabled(loginButton);
     }
 
-    public void clickLoginButton() {
-        log.debug("clickLoginButton()");
+    public boolean isLoginButtonEnabled(int timeout) {
+        log.debug("isLoginButtonEnabled(" + timeout + ")");
+        Assert.assertTrue(isLoginButtonDisplayed(), "Login Button is NOT displayed on LoginPage!");
+        WebElement loginButton = getWebElement(loginButtonLocator);
+        return isWebElementEnabled(loginButton, timeout);
+    }
+
+    private void clickLoginButtonNoVerification() {
         Assert.assertTrue(isLoginButtonEnabled(), "Login Button is NOT enabled on LoginPage!");
         WebElement loginButton = getWebElement(loginButtonLocator);
         clickOnWebElement(loginButton);
+    }
+
+    public WelcomePage clickLoginButton() {
+        log.debug("clickLoginButton()");
+        clickLoginButtonNoVerification();
+        WelcomePage welcomePage = new WelcomePage(driver);
+        return welcomePage.verifyWelcomePage();
+    }
+
+    public LoginPage clickLoginButtonNoProgress() {
+        log.debug("clickLoginButtonNoProgress()");
+        clickLoginButtonNoVerification();
+        LoginPage loginPage = new LoginPage(driver);
+        return loginPage.verifyLoginPage();
+    }
+
+    public <T> T clickLoginButton(boolean bProgress) {
+        log.debug("clickLoginButton(" + bProgress + ")");
+        clickLoginButtonNoVerification();
+        if (bProgress) {
+            WelcomePage welcomePage = new WelcomePage(driver);
+            return (T) welcomePage.verifyWelcomePage();
+        } else {
+            LoginPage loginPage = new LoginPage(driver);
+            return (T) loginPage.verifyLoginPage();
+        }
     }
 
     public String getLoginButtonTitle() {
@@ -131,7 +181,7 @@ public class LoginPage extends BasePageClass {
     public String getSuccessMessage() {
         log.debug("getSuccessMessage()");
         WebElement successMessage = getWebElement(successMessageLocator);
-        return successMessage.getText();
+        return getTextFromWebElement(successMessage);
 
     }
 
@@ -142,10 +192,8 @@ public class LoginPage extends BasePageClass {
     public String getErrorMessage() {
         log.debug("getErrorMessage()");
         WebElement errorMessage = getWebElement(errorMessageLocator);
-        return errorMessage.getText();
+        return getTextFromWebElement(errorMessage);
     }
-
-    // getUsername()
 
     public void login(String sUsername, String sPassword) {
         log.info("login(" + sUsername + ", " + sPassword + ")");
