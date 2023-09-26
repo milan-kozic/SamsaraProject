@@ -6,7 +6,9 @@ import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.AddUserDialogBox;
 import pages.LoginPage;
+import pages.UsersPage;
 import pages.WelcomePage;
 import utils.DateTimeUtils;
 
@@ -45,13 +47,14 @@ public class TestExample extends BaseTestClass {
             //String sLoginButtonTitle = loginPage.getLoginButtonTitle();
             //System.out.println("Login Button Title: " + sLoginButtonTitle);
 
-            WelcomePage welcomePage = loginPage.clickLoginButton(true);
+            //WelcomePage welcomePage = loginPage.clickLoginButton(true);
+            WelcomePage welcomePage = loginPage.clickLoginButton();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             //String sWelcomePageTitle = welcomePage.getPageTitle();
             //System.out.println("Page Title: " + sWelcomePageTitle);
 
-            welcomePage.clickLogOutLink();
+            loginPage = welcomePage.clickLogOutLink();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             Assert.assertTrue(loginPage.isSuccessMessageDisplayed(), "Success Message is NOT displayed!");
@@ -90,13 +93,44 @@ public class TestExample extends BaseTestClass {
             loginPage.typePassword(sPassword);
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage = loginPage.clickLoginButton(false);
+            //loginPage = loginPage.clickLoginButton(false);
+            loginPage = loginPage.clickLoginButtonNoProgress();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             Assert.assertTrue(loginPage.isErrorMessageDisplayed());
 
             String sActualErrorMessage = loginPage.getErrorMessage();
             Assert.assertEquals(sActualErrorMessage, sExpectedErrorMessage, "Wrong Error Message!");
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testAddNewUser() {
+
+        log.info("[START TEST] testAddNewUser()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            UsersPage usersPage = welcomePage.clickUsersTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            AddUserDialogBox addUserDialogBox = usersPage.clickAddNewUserButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
             quitDriver(driver);

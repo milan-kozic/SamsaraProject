@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import utils.PropertiesUtils;
 
-public class LoginPage extends BasePageClass {
+public class LoginPage extends LoggedOutNavigationBar {
 
     private final String LOGIN_PAGE_URL = PropertiesUtils.getBaseUrl() + PageUrlPaths.LOGIN_PAGE;
 
@@ -195,11 +195,11 @@ public class LoginPage extends BasePageClass {
         return getTextFromWebElement(errorMessage);
     }
 
-    public void login(String sUsername, String sPassword) {
+    public WelcomePage login(String sUsername, String sPassword) {
         log.info("login(" + sUsername + ", " + sPassword + ")");
         typeUsername(sUsername);
         typePassword(sPassword);
-        clickLoginButton();
+        return clickLoginButton();
     }
 
 }

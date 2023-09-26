@@ -5,15 +5,13 @@ import data.Time;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import utils.PropertiesUtils;
 
-public class WelcomePage extends BasePageClass {
+public class WelcomePage extends LoggedInNavigationBar {
 
     private final String WELCOME_PAGE_URL = PropertiesUtils.getBaseUrl() + PageUrlPaths.WELCOME_PAGE;
 
     private final By pageTitleLocator = By.xpath("//div[contains(@class,'panel-title')]");
-    private final By logoutLinkLocator = By.xpath("//a[contains(@href, 'logoutForm')]");
 
     public WelcomePage(WebDriver driver) {
         super(driver);
@@ -47,23 +45,5 @@ public class WelcomePage extends BasePageClass {
         log.debug("getPageTitle()");
         WebElement pageTitle = getWebElement(pageTitleLocator);
         return getTextFromWebElement(pageTitle);
-    }
-
-    public boolean isLogOutLinkDisplayed() {
-        log.debug("isLogOutLinkDisplayed()");
-        return isWebElementDisplayed(logoutLinkLocator);
-    }
-
-    public boolean isLogOutLinkEnabled() {
-        log.debug("isLogOutLinkEnabled()");
-        Assert.assertTrue(isLogOutLinkDisplayed(), "LogOut Link is NOT displayed on WelcomePage!");
-        WebElement logoutLink = getWebElement(logoutLinkLocator);
-        return isWebElementEnabled(logoutLink);
-    }
-    public void clickLogOutLink() {
-        log.debug("clickLogOutLink()");
-        Assert.assertTrue(isLogOutLinkEnabled(), "LogOut Link is NOT enabled on WelcomePage!");
-        WebElement logoutLink = getWebElement(logoutLinkLocator);
-        clickOnWebElement(logoutLink);
     }
 }
