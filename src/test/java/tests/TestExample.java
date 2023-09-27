@@ -12,7 +12,7 @@ import pages.UsersPage;
 import pages.WelcomePage;
 import utils.DateTimeUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Test (groups={Groups.REGRESSION})
 public class TestExample extends BaseTestClass {
@@ -131,6 +131,50 @@ public class TestExample extends BaseTestClass {
 
             AddUserDialogBox addUserDialogBox = usersPage.clickAddNewUserButton();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage = addUserDialogBox.clickCancelButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testUserDetails() {
+
+        log.info("[START TEST] testUserDetails()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            UsersPage usersPage = welcomePage.clickUsersTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            List<String> usernames = usersPage.getAllUsernames();
+            log.info(usernames);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            log.info("Dedoje? " + usersPage.isUserPresentInUsersTable("dedoje"));
+            log.info("Kreten? " + usersPage.isUserPresentInUsersTable("kreten"));
+
+            //log.info("Dedoje Index: " + usersPage.getUserRowNumber("dedoje"));
+            //log.info("Dedoje DisplayName: " + usersPage.getUsersDisplayName("dedoje"));
+            //log.info("Dedoje HeroCount: " + usersPage.getUsersHeroCount("dedoje"));
 
         } finally {
             quitDriver(driver);
