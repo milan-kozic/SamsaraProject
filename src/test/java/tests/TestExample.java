@@ -6,10 +6,7 @@ import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pages.AddUserDialogBox;
-import pages.LoginPage;
-import pages.UsersPage;
-import pages.WelcomePage;
+import pages.*;
 import utils.DateTimeUtils;
 
 import java.util.List;
@@ -170,11 +167,92 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             log.info("Dedoje? " + usersPage.isUserPresentInUsersTable("dedoje"));
-            log.info("Kreten? " + usersPage.isUserPresentInUsersTable("kreten"));
+            log.info("Display Name: " + usersPage.getDisplayNameInUsersTable("dedoje"));
+            log.info("Hero Count: " + usersPage.getHeroCountInUsersTable("dedoje"));
+
+            UserHeroesDialogBox userHeroesDialogBox = usersPage.clickHeroCountLinkInUsersTable("dedoje");
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage = userHeroesDialogBox.clickCloseButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            UserDetailsDialogBox  userDetailsDialogBox = usersPage.clickUserDetailsIconInUsersTable("dedoje");
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage = userDetailsDialogBox.clickCloseButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
             //log.info("Dedoje Index: " + usersPage.getUserRowNumber("dedoje"));
             //log.info("Dedoje DisplayName: " + usersPage.getUsersDisplayName("dedoje"));
             //log.info("Dedoje HeroCount: " + usersPage.getUsersHeroCount("dedoje"));
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testAdminPage() {
+
+        log.info("[START TEST] testAdminPage()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            AdminPage adminPage = welcomePage.clickAdminTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            log.info("ENABLE SOMETHING EXISTS? " + adminPage.isCheckBoxDisplayed(AdminPage.CHECKBOX_ENABLE_SOMETHING));
+            log.info("ALLOW USERS EXISTS? " + adminPage.isCheckBoxDisplayed(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+            log.info("Is Checked? " + adminPage.isCheckBoxChecked(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+            adminPage.checkCheckBox(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION);
+            log.info("Is Checked? " + adminPage.isCheckBoxChecked(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+            adminPage.checkCheckBox(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION);
+            log.info("Is Checked? " + adminPage.isCheckBoxChecked(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+            adminPage.uncheckCheckBox(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION);
+            log.info("Is Checked? " + adminPage.isCheckBoxChecked(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+            adminPage.uncheckCheckBox(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION);
+            log.info("Is Checked? " + adminPage.isCheckBoxChecked(AdminPage.CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION));
+
+//            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
+//
+//            adminPage.checkAllowUsersToShareRegistrationCodeCheckBox();
+//            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+//            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
+//
+//            adminPage.checkAllowUsersToShareRegistrationCodeCheckBox();
+//            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+//            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
+//
+//            adminPage.uncheckAllowUsersToShareRegistrationCodeCheckBox();
+//            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+//            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
+//
+//            adminPage.uncheckAllowUsersToShareRegistrationCodeCheckBox();
+//            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+//            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
+
+            adminPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
             quitDriver(driver);

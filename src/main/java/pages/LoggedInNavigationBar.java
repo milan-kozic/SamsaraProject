@@ -13,6 +13,7 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
     private final By samsaraLogoLocator = By.xpath(headerLocatorString + "//a[@class='navbar-brand']");
     private final By usersTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.USERS_PAGE + "']");
     private final By heroesTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.HEROES_PAGE + "']");
+    private final By adminTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.ADMIN_PAGE + "']");
     private final By profileTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.PROFILE_PAGE + "']");
     private final By logoutLinkLocator = By.xpath(headerLocatorString + "//a[contains(@href, 'logoutForm')]");
 
@@ -67,6 +68,34 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
         clickOnWebElement(usersTab);
         UsersPage usersPage = new UsersPage(driver);
         return usersPage.verifyUsersPage();
+    }
+
+    public boolean isAdminTabDisplayed() {
+        log.debug("isAdminTabDisplayed()");
+        return isWebElementDisplayed(adminTabLocator);
+    }
+
+    public boolean isAdminTabEnabled() {
+        log.debug("isAdminTabEnabled()");
+        Assert.assertTrue(isAdminTabDisplayed(), "Admin Tab is NOT displayed on Navigation Bar!");
+        WebElement adminTab = getWebElement(adminTabLocator);
+        return isWebElementEnabled(adminTab);
+    }
+
+    public String getAdminTabTitle() {
+        log.debug("getAdminTabTitle()");
+        Assert.assertTrue(isAdminTabDisplayed(), "Admin Tab is NOT displayed on Navigation Bar!");
+        WebElement adminTab = getWebElement(adminTabLocator);
+        return getTextFromWebElement(adminTab);
+    }
+
+    public AdminPage clickAdminTab() {
+        log.debug("clickAdminTab()");
+        Assert.assertTrue(isAdminTabEnabled(), "Admin Tab is NOT enabled on Navigation Bar!");
+        WebElement adminTab = getWebElement(adminTabLocator);
+        clickOnWebElement(adminTab);
+        AdminPage adminPage = new AdminPage(driver);
+        return adminPage.verifyAdminPage();
     }
 
     public boolean isLogOutLinkDisplayed() {

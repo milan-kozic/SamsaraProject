@@ -7,5 +7,6 @@ public final class PageUrlPaths {
     public static final String WELCOME_PAGE = "/";
     public static final String USERS_PAGE = "/users";
     public static final String HEROES_PAGE = "/heroes";
+    public static final String ADMIN_PAGE = "/admin";
     public static final String PROFILE_PAGE = "/profile";
 }
