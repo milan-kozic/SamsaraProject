@@ -11,9 +11,10 @@ public class AddUserDialogBox extends BasePageClass {
     private final By addUserDialogBoxLocator = By.id("addUserModal");
 
     private final String addUserDialogBoxLocatorString = "//div[@id='addUserModal']";
+    private final By addUserDialogBoxTitleLocator = By.xpath(addUserDialogBoxLocatorString + "//button[contains(@class, 'btn-default')]");
     private final By cancelButtonLocator = By.xpath(addUserDialogBoxLocatorString + "//button[contains(@class, 'btn-default')]");
 
-    protected AddUserDialogBox(WebDriver driver) {
+    public AddUserDialogBox(WebDriver driver) {
         super(driver);
     }
 
@@ -30,6 +31,18 @@ public class AddUserDialogBox extends BasePageClass {
 
     public boolean isAddUserDialogBoxClosed(int timeout) {
         return isWebElementInvisible(addUserDialogBoxLocator, timeout);
+    }
+
+    public boolean isDialogBoxTitleDisplayed() {
+        log.debug("isDialogBoxTitleDisplayed()");
+        return isWebElementDisplayed(addUserDialogBoxTitleLocator);
+    }
+
+    public String getDialogBoxTitle() {
+        log.debug("getDialogBoxTitle()");
+        Assert.assertTrue(isDialogBoxTitleDisplayed(), "DialogBox Title is NOT displayed on 'Add User' DialogBox");
+        WebElement addUserDialogBoxTitle = getWebElement(addUserDialogBoxTitleLocator);
+        return getTextFromWebElement(addUserDialogBoxTitle);
     }
 
     public boolean isCancelButtonDisplayed() {

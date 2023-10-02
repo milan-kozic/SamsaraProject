@@ -2,10 +2,12 @@ package tests;
 
 import data.CommonStrings;
 import data.Groups;
+import data.HeroClass;
 import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.*;
 import utils.DateTimeUtils;
 
@@ -23,7 +25,8 @@ public class TestExample extends BaseTestClass {
 
         String sUsername = "user";
         String sPassword = "password";
-        String sExpectedSuccessMessage = CommonStrings.LOGOUT_SUCCESS_MESSAGE;
+        String sExpectedSuccessMessage = CommonStrings.getLogoutSuccessMessage();
+        log.info("EXPECTED MESSAGE: " + sExpectedSuccessMessage);
 
         try {
 
@@ -73,7 +76,7 @@ public class TestExample extends BaseTestClass {
 
         String sUsername = "user";
         String sPassword = "wrong_password";
-        String sExpectedErrorMessage = CommonStrings.LOGIN_ERROR_MESSAGE;
+        String sExpectedErrorMessage = CommonStrings.getLoginErrorMessage();
         try {
 
             driver = setUpDriver();
@@ -252,6 +255,151 @@ public class TestExample extends BaseTestClass {
 //            log.info("Is Checked? : "  + adminPage.isAllowUsersToShareRegistrationCodeCheckBoxChecked());
 
             adminPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testAddNewHero() {
+
+        log.info("[START TEST] testAddNewHero()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            HeroesPage heroesPage = welcomePage.clickHeroesTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            log.info("HEROES: " + heroesPage.getAllHeroNames());
+
+            AddHeroDialogBox addHeroDialogBox = heroesPage.clickAddNewHeroButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            addHeroDialogBox.typeHeroName("Heroj");
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            addHeroDialogBox.typeHeroLevel(45);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            log.info("HERO CLASS: " + addHeroDialogBox.getSelectedHeroClass());
+
+            log.info("IDIOT? " + addHeroDialogBox.isOptionPresentInHeroClassDropDownList("Idiot"));
+            log.info("RANGER? " + addHeroDialogBox.isOptionPresentInHeroClassDropDownList(HeroClass.RANGER));
+
+            addHeroDialogBox.selectHeroClass(HeroClass.RANGER);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            log.info("HERO CLASS: " + addHeroDialogBox.getSelectedHeroClass());
+
+            heroesPage = addHeroDialogBox.clickCancelButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            heroesPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testDeleteUser() {
+
+        log.info("[START TEST] testDeleteUser()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        String sUserUsername = "bubble";
+        String sUserFullName = "Princess Bubblegum";
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            UsersPage usersPage = welcomePage.clickUsersTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage.searchUser(sUserUsername);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            DeleteUserDialogBox deleteUserDialogBox = usersPage.clickDeleteUserIconInUsersTable(sUserUsername);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            String sActualDeleteUserMessage = deleteUserDialogBox.getDeleteUserMessage();
+            log.info("ACTUAL MESSAGE: " + sActualDeleteUserMessage);
+
+            String sExpectedDeleteUserMessage = CommonStrings.getDeleteUserMessage(sUserUsername, sUserFullName);
+            log.info("EXPECTED MESSAGE: " + sExpectedDeleteUserMessage);
+            Assert.assertEquals(sActualDeleteUserMessage, sExpectedDeleteUserMessage, "Wrong Delete User Message!");
+
+            usersPage = deleteUserDialogBox.clickCancelButton();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            usersPage.clickLogOutLink();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+        } finally {
+            quitDriver(driver);
+        }
+    }
+
+    @Test
+    public void testUselessTooltip() {
+
+        log.info("[START TEST] testUselessTooltip()");
+
+        WebDriver driver = null;
+
+        String sUsername = "admin";
+        String sPassword = "password";
+
+        String sExpectedUselessTooltipText = CommonStrings.getUselessTooltip();
+        String sExpectedUselessTooltipTitle = CommonStrings.getUselessTooltipTitle();
+
+        try {
+            driver = setUpDriver();
+
+            LoginPage loginPage = new LoginPage(driver).open();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            PracticePage practicePage = welcomePage.clickPracticeTab();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
+            Assert.assertFalse(practicePage.isUselessTooltipDisplayed(), "Useless Tooltip should NOT be displayed if mouse is not hovered over Useless Tooltip Title!");
+
+            String sActualUselessTooltipTitle = practicePage.getUselessTooltipTitle();
+            Assert.assertEquals(sActualUselessTooltipTitle, sExpectedUselessTooltipTitle, "Wrong Useless Tooltip Title!");
+
+            String sActualUselessTooltipText = practicePage.getUselessTooltip();
+            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+            Assert.assertEquals(sActualUselessTooltipText, sExpectedUselessTooltipText, "Wrong Useless Tooltip Text!");
+
+            practicePage.clickLogOutLink();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {

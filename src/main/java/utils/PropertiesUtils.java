@@ -39,6 +39,10 @@ public class PropertiesUtils extends LoggerUtils {
         return sEnvironment;
     }
 
+    public static String getLocale() {
+        return getProperty("locale");
+    }
+
     private static String getLocalBaseUrl() {
         return getProperty("localBaseUrl");
     }

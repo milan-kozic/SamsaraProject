@@ -1,11 +1,12 @@
 package pages;
 
+import data.Time;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.*;
 import utils.LoggerUtils;
+import utils.WebDriverUtils;
 
 import java.time.Duration;
 import java.util.List;
@@ -17,6 +18,7 @@ abstract class BasePageClass extends LoggerUtils {
 
     protected BasePageClass(WebDriver driver) {
         this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     protected void openUrl(String url) {
@@ -170,6 +172,18 @@ abstract class BasePageClass extends LoggerUtils {
         }
     }
 
+    protected boolean isWebElementDisplayed(WebElement element, int timeout) {
+        log.trace("isWebElementDisplayed(" + element + ", " + timeout + ")");
+        try {
+            WebDriverUtils.setImplicitWait(driver, timeout);
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        } finally {
+            WebDriverUtils.setImplicitWait(driver, Time.IMPLICIT_TIMEOUT);
+        }
+    }
+
     protected boolean isWebElementEnabled(WebElement element) {
         log.trace("isWebElementEnabled(" + element + ")");
         try {
@@ -303,5 +317,37 @@ abstract class BasePageClass extends LoggerUtils {
         log.trace("clickOnWebElementJS(" + element + ")");
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", element);
+    }
+
+    protected String getFirstSelectedOptionOnWebElement(WebElement element) {
+        log.trace("getFirstSelectedOptionOnWebElement(" + element + ")");
+        Select select = new Select(element);
+        WebElement option = select.getFirstSelectedOption();
+        return getTextFromWebElement(option);
+    }
+
+    protected boolean isOptionPresentOnWebElement(WebElement element, String option) {
+        log.trace("isOptionPresentOnWebElement(" + element + ", " + option + ")");
+        Select select = new Select(element);
+        List<WebElement> options = select.getOptions();
+        for (WebElement e : options) {
+            String optText = getTextFromWebElement(e);
+            if (optText.equals(option)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void selectOptionOnWebElement(WebElement element, String option) {
+        log.trace("isOptionPresentOnWebElement(" + element + ", " + option + ")");
+        Select select = new Select(element);
+        select.selectByVisibleText(option);
+    }
+
+    protected void moveMouseToWebElement(WebElement element) {
+        log.trace("moveMouseToWebElement(" + element + ")");
+        Actions action = new Actions(driver);
+        action.moveToElement(element).perform();
     }
 }

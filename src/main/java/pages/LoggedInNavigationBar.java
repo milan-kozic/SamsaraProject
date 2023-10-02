@@ -14,6 +14,7 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
     private final By usersTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.USERS_PAGE + "']");
     private final By heroesTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.HEROES_PAGE + "']");
     private final By adminTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.ADMIN_PAGE + "']");
+    private final By practiceTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.PRACTICE_PAGE + "']");
     private final By profileTabLocator = By.xpath(headerLocatorString + "//a[@href='" + PageUrlPaths.PROFILE_PAGE + "']");
     private final By logoutLinkLocator = By.xpath(headerLocatorString + "//a[contains(@href, 'logoutForm')]");
 
@@ -70,6 +71,34 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
         return usersPage.verifyUsersPage();
     }
 
+    public boolean isHeroesTabDisplayed() {
+        log.debug("isHeroesTabDisplayed()");
+        return isWebElementDisplayed(heroesTabLocator);
+    }
+
+    public boolean isHeroesTabEnabled() {
+        log.debug("isHeroesTabEnabled()");
+        Assert.assertTrue(isHeroesTabDisplayed(), "Heroes Tab is NOT displayed on Navigation Bar!");
+        WebElement heroesTab = getWebElement(heroesTabLocator);
+        return isWebElementEnabled(heroesTab);
+    }
+
+    public String getHeroesTabTitle() {
+        log.debug("getHeroesTabTitle()");
+        Assert.assertTrue(isHeroesTabDisplayed(), "Heroes Tab is NOT displayed on Navigation Bar!");
+        WebElement heroesTab = getWebElement(heroesTabLocator);
+        return getTextFromWebElement(heroesTab);
+    }
+
+    public HeroesPage clickHeroesTab() {
+        log.debug("clickHeroesTab()");
+        Assert.assertTrue(isHeroesTabEnabled(), "Heroes Tab is NOT enabled on Navigation Bar!");
+        WebElement heroesTab = getWebElement(heroesTabLocator);
+        clickOnWebElement(heroesTab);
+        HeroesPage heroesPage = new HeroesPage(driver);
+        return heroesPage.verifyHeroesPage();
+    }
+
     public boolean isAdminTabDisplayed() {
         log.debug("isAdminTabDisplayed()");
         return isWebElementDisplayed(adminTabLocator);
@@ -96,6 +125,34 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
         clickOnWebElement(adminTab);
         AdminPage adminPage = new AdminPage(driver);
         return adminPage.verifyAdminPage();
+    }
+
+    public boolean isPracticeTabDisplayed() {
+        log.debug("isPracticeTabDisplayed()");
+        return isWebElementDisplayed(practiceTabLocator);
+    }
+
+    public boolean isPracticeTabEnabled() {
+        log.debug("isPracticeTabEnabled()");
+        Assert.assertTrue(isPracticeTabDisplayed(), "Practice Tab is NOT displayed on Navigation Bar!");
+        WebElement practiceTab = getWebElement(practiceTabLocator);
+        return isWebElementEnabled(practiceTab);
+    }
+
+    public String getPracticeTabTitle() {
+        log.debug("getPracticeTabTitle()");
+        Assert.assertTrue(isPracticeTabDisplayed(), "Practice Tab is NOT displayed on Navigation Bar!");
+        WebElement practiceTab = getWebElement(practiceTabLocator);
+        return getTextFromWebElement(practiceTab);
+    }
+
+    public PracticePage clickPracticeTab() {
+        log.debug("clickPracticeTab()");
+        Assert.assertTrue(isPracticeTabEnabled(), "Practice Tab is NOT enabled on Navigation Bar!");
+        WebElement practiceTab = getWebElement(practiceTabLocator);
+        clickOnWebElement(practiceTab);
+        PracticePage practicePage = new PracticePage(driver);
+        return practicePage.verifyPracticePage();
     }
 
     public boolean isLogOutLinkDisplayed() {

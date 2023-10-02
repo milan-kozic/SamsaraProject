@@ -1,13 +1,39 @@
 package data;
 
+import org.testng.Assert;
+import utils.PropertiesUtils;
+
+import java.util.Properties;
+
 public final class CommonStrings {
 
-    // LOGIN PAGE
-    public static final String LOGIN_PAGE_TITLE = "Samsara";
-    public static final String LOGIN_BUTTON_TITLE = "Log In";
-    public static final String LOGOUT_SUCCESS_MESSAGE = "You have been logged out.";
-    public static final String LOGIN_ERROR_MESSAGE = "Invalid username and/or password.";
+    private static final String sLocaleFile = "locale_" + PropertiesUtils.getLocale() + ".loc";
+    private static final String sLocalePath = "\\locale\\" + sLocaleFile;
+    private static final Properties locale = PropertiesUtils.loadPropertiesFile(sLocalePath);
 
-    // WELCOME PAGE
-    public static final String WELCOME_PAGE_TITLE = "Hello, and welcome to our gamers page!";
+    private static String getLocaleString(String sTitle) {
+        String sResult = locale.getProperty(sTitle);
+        Assert.assertNotNull(sResult, "Cannot find string '" + sTitle + "' in " + sLocaleFile + " file!");
+        return sResult;
+    }
+
+    public static String getLogoutSuccessMessage() {
+        return getLocaleString("LOGOUT_SUCCESS_MESSAGE");
+    }
+
+    public static String getLoginErrorMessage() {
+        return getLocaleString("LOGIN_ERROR_MESSAGE");
+    }
+
+    public static String getDeleteUserMessage(String sUsername, String sFullName) {
+        return getLocaleString("DELETE_USER_MESSAGE").replace("%USERNAME%", sUsername).replace("%FULL_NAME%", sFullName);
+    }
+
+    public static String getUselessTooltip() {
+        return getLocaleString("USELESS_TOOLTIP");
+    }
+
+    public static String getUselessTooltipTitle() {
+        return getLocaleString("USELESS_TOOLTIP_TITLE");
+    }
 }

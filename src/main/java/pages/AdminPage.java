@@ -15,6 +15,7 @@ public class AdminPage extends LoggedInNavigationBar {
     public static final String CHECKBOX_ALLOW_USERS_TO_SHARE_REGISTRATION = "Allow Users To Share Registration";
     public static final String CHECKBOX_ENABLE_SOMETHING = "Enable Something";
 
+    private final By pageTitleLocator = By.xpath("//div[contains(@class,'panel-title')]");
     private final By allowUsersToShareRegistrationCodeCheckBoxLocator = By.id("usersAllowed");
     private final By enableSomethingCheckboxLocator = By.id("enableSomething");
 
@@ -40,6 +41,17 @@ public class AdminPage extends LoggedInNavigationBar {
         waitForUrlChange(ADMIN_PAGE_URL, Time.TIME_SHORTER);
         waitUntilPageIsReady(Time.TIME_SHORT);
         return this;
+    }
+
+    public boolean isPageTitleDisplayed() {
+        log.debug("isPageTitleDisplayed()");
+        return isWebElementDisplayed(pageTitleLocator);
+    }
+
+    public String getPageTitle() {
+        log.debug("getPageTitle()");
+        WebElement pageTitle = getWebElement(pageTitleLocator);
+        return getTextFromWebElement(pageTitle);
     }
 
     private By getCheckBoxLocator(String sCheckBoxName) {
@@ -101,8 +113,6 @@ public class AdminPage extends LoggedInNavigationBar {
         AdminPage adminPage = new AdminPage(driver);
         return adminPage.verifyAdminPage();
     }
-
-
 
     public boolean isAllowUsersToShareRegistrationCodeCheckBoxDisplayed() {
         log.debug("isAllowUsersToShareRegistrationCodeCheckBoxDisplayed()");

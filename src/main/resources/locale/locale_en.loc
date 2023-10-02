@@ -1,0 +1,15 @@
+# Login Page
+LOGIN_PAGE_TITLE=Samsara
+LOGOUT_SUCCESS_MESSAGE=You have been logged out.
+LOGIN_ERROR_MESSAGE=Invalid username and/or password.
+LOGIN_BUTTON_TITLE=Log In
+
+# Welcome Page
+WELCOME_PAGE_TITLE="Hello, and welcome to our gamers page!
+
+# Delete User Dialog Box
+DELETE_USER_MESSAGE=Do you really want to delete user %USERNAME% (%FULL_NAME%)?
+
+# Practice Page
+USELESS_TOOLTIP_TITLE=Useless Tooltip
+USELESS_TOOLTIP=This is one useless tooltip! Nevertheless, try to get its content!

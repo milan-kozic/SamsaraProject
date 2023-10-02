@@ -9,4 +9,6 @@ public final class PageUrlPaths {
     public static final String HEROES_PAGE = "/heroes";
     public static final String ADMIN_PAGE = "/admin";
     public static final String PROFILE_PAGE = "/profile";
+    public static final String PRACTICE_PAGE = "/practice";
+
 }

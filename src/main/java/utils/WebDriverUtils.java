@@ -115,4 +115,9 @@ public class WebDriverUtils extends LoggerUtils {
             driver.quit();
         }
     }
+
+    public static void setImplicitWait(WebDriver driver, int timeout) {
+        log.trace("setImplicitWait(" + driver + ")");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
+    }
 }

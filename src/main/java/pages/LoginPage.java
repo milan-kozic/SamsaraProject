@@ -14,6 +14,7 @@ public class LoginPage extends LoggedOutNavigationBar {
 
     // Locators
     private final String loginBoxLocatorString = "//div[@id='loginbox']";
+    private final By pageTitleLocator = By.xpath("//div[contains(@class,'panel-title')]");
     private final By usernameTextFieldLocator = By.id("username");
     private final By passwordTextFieldLocator = By.id("password");
     private final By loginButtonLocator = By.xpath(loginBoxLocatorString + "//input[contains(@class, 'btn-primary')]");
@@ -46,7 +47,16 @@ public class LoginPage extends LoggedOutNavigationBar {
         return this;
     }
 
-    // Basic Selenium Methods
+    public boolean isPageTitleDisplayed() {
+        log.debug("isPageTitleDisplayed()");
+        return isWebElementDisplayed(pageTitleLocator);
+    }
+
+    public String getPageTitle() {
+        log.debug("getPageTitle()");
+        WebElement pageTitle = getWebElement(pageTitleLocator);
+        return getTextFromWebElement(pageTitle);
+    }
 
     public boolean isUsernameTextFieldDisplayed() {
         log.debug("isUsernameTextFieldDisplayed()");
@@ -195,6 +205,12 @@ public class LoginPage extends LoggedOutNavigationBar {
         return getTextFromWebElement(errorMessage);
     }
 
+    /**
+     * Login to Samsara
+     * @param sUsername {String} - User's Username
+     * @param sPassword {String} - User's Password
+     * @return {WelcomePage}
+     */
     public WelcomePage login(String sUsername, String sPassword) {
         log.info("login(" + sUsername + ", " + sPassword + ")");
         typeUsername(sUsername);

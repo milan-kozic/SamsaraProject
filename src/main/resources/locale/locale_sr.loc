@@ -1,0 +1,15 @@
+# Login Page
+LOGIN_PAGE_TITLE=Samsara
+LOGOUT_SUCCESS_MESSAGE=Uspesno si se izlogovao.
+LOGIN_ERROR_MESSAGE=Pogresno korisnicko ime i/ili sifra.
+LOGIN_BUTTON_TITLE=Uloguj se
+
+# Welcome Page
+WELCOME_PAGE_TITLE=Gde si bre, pajseru!
+
+# Delete User Dialog Box
+DELETE_USER_MESSAGE=Da li zaista zelite da obrisete korisnika %USERNAME% (%FULL_NAME%)?
+
+# Practice Page
+USELESS_TOOLTIP_TITLE=Beskorisni tultip
+USELESS_TOOLTIP=Ovo je jedan beskorisni tultip...
