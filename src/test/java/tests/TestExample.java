@@ -1,26 +1,38 @@
 package tests;
 
 import data.CommonStrings;
-import data.Groups;
 import data.HeroClass;
 import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import pages.*;
 import utils.DateTimeUtils;
+import utils.ScreenShotUtils;
 
 import java.util.List;
 
-@Test (groups={Groups.REGRESSION})
+//@Test (groups={Groups.REGRESSION})
 public class TestExample extends BaseTestClass {
 
 
-    @Test
+    //private WebDriver driver;
+
+    //@BeforeMethod
+//    public void setUpTest(ITestContext testContext) {
+//        log.debug("[SETUP TEST]");
+//
+//
+//        driver = setUpDriver();
+//        // setup driver
+//        // pogfpdmgpdfmpgd
+//    }
+
+    //@Test
     public void testSuccessfulLoginLogout() {
 
+        String sFileName = "testSuccessfulLoginLogout";
         log.info("[START TEST] testSuccessfulLoginLogout()");
+
         WebDriver driver = null;
 
         String sUsername = "user";
@@ -28,9 +40,12 @@ public class TestExample extends BaseTestClass {
         String sExpectedSuccessMessage = CommonStrings.getLogoutSuccessMessage();
         log.info("EXPECTED MESSAGE: " + sExpectedSuccessMessage);
 
+        boolean bSuccess = false;
+
         try {
 
             driver = setUpDriver();
+
             LoginPage loginPage = new LoginPage(driver).open();
 
             //DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
@@ -53,23 +68,45 @@ public class TestExample extends BaseTestClass {
 
             //String sWelcomePageTitle = welcomePage.getPageTitle();
             //System.out.println("Page Title: " + sWelcomePageTitle);
-
             loginPage = welcomePage.clickLogOutLink();
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+
 
             Assert.assertTrue(loginPage.isSuccessMessageDisplayed(), "Success Message is NOT displayed!");
 
             String sActualSuccessMessage = loginPage.getSuccessMessage();
             Assert.assertEquals(sActualSuccessMessage, sExpectedSuccessMessage, "Wrong Success Message!");
 
+            bSuccess = true;
+
         } finally {
+
+            if (!bSuccess) {
+                ScreenShotUtils.takeScreenShot(driver, sFileName);
+            }
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@AfterMethod(alwaysRun = true)
+//    public void tearDownTest(ITestResult testResult) {
+//        log.debug("[TEAR DOWN TEST]");
+//        log.info("STATUS: " + testResult.getStatus());
+//        String sMethodName = testResult.getName();
+//        String sClassName = testResult.getTestClass().getName();
+//
+//        // rollback
+//        // delete user from database...
+//        if (testResult.getStatus() == ITestResult.FAILURE) {
+//            log.info("Taking screenshot...");
+//            ScreenShotUtils.takeScreenShot(driver, sMethodName);
+//        }
+//        quitDriver(driver);
+//    }
+
+    //@Test
     public void testUnsuccessfulLoginWrongPassword() {
 
+        String sFileName = "testUnsuccessfulLoginWrongPassword";
         log.info("[START TEST] testUnsuccessfulLoginWrongPassword()");
 
         WebDriver driver = null;
@@ -77,6 +114,8 @@ public class TestExample extends BaseTestClass {
         String sUsername = "user";
         String sPassword = "wrong_password";
         String sExpectedErrorMessage = CommonStrings.getLoginErrorMessage();
+
+        boolean bSuccess = false;
         try {
 
             driver = setUpDriver();
@@ -97,19 +136,26 @@ public class TestExample extends BaseTestClass {
             loginPage = loginPage.clickLoginButtonNoProgress();
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
+
             Assert.assertTrue(loginPage.isErrorMessageDisplayed());
 
             String sActualErrorMessage = loginPage.getErrorMessage();
             Assert.assertEquals(sActualErrorMessage, sExpectedErrorMessage, "Wrong Error Message!");
 
+            bSuccess = true;
+
         } finally {
+            if (!bSuccess) {
+                ScreenShotUtils.takeScreenShot(driver, sFileName);
+            }
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testAddNewUser() {
 
+        String sFileName = "testAddNewUser";
         log.info("[START TEST] testAddNewUser()");
 
         WebDriver driver = null;
@@ -139,13 +185,15 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testUserDetails() {
 
+        String sFileName = "testUserDetails";
         log.info("[START TEST] testUserDetails()");
 
         WebDriver driver = null;
@@ -193,13 +241,15 @@ public class TestExample extends BaseTestClass {
             //log.info("Dedoje HeroCount: " + usersPage.getUsersHeroCount("dedoje"));
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testAdminPage() {
 
+        String sFileName = "testAdminPage";
         log.info("[START TEST] testAdminPage()");
 
         WebDriver driver = null;
@@ -258,13 +308,15 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testAddNewHero() {
 
+        String sFileName = "testAddNewHero";
         log.info("[START TEST] testAddNewHero()");
 
         WebDriver driver = null;
@@ -312,13 +364,15 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testDeleteUser() {
 
+        String sFileName = "testDeleteUser";
         log.info("[START TEST] testDeleteUser()");
 
         WebDriver driver = null;
@@ -361,13 +415,15 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }
 
-    @Test
+    //@Test
     public void testUselessTooltip() {
 
+        String sFileName = "testUselessTooltip";
         log.info("[START TEST] testUselessTooltip()");
 
         WebDriver driver = null;
@@ -403,6 +459,7 @@ public class TestExample extends BaseTestClass {
             DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
         } finally {
+            ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
     }

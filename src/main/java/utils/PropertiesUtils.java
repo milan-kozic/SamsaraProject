@@ -116,4 +116,8 @@ public class PropertiesUtils extends LoggerUtils {
     public static String getDriversFolder() {
         return getProperty("driversFolder");
     }
+
+    public static String getScreenShotsFolder() {
+        return getProperty("screenshotsFolder");
+    }
 }
