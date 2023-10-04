@@ -1,7 +1,6 @@
 package tests;
 
 import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
 import org.testng.ITestResult;
 import utils.LoggerUtils;
 import utils.ScreenShotUtils;
@@ -22,8 +21,6 @@ public class BaseTestClass extends LoggerUtils {
         String sTestName = testResult.getTestClass().getName();
 
         try {
-            // rollback
-            Assert.fail("Rollback FAILED!!!");
             if (testResult.getStatus() == ITestResult.FAILURE) {
                 ScreenShotUtils.takeScreenShot(driver, sTestName);
             }

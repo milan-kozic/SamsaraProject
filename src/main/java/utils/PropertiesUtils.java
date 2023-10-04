@@ -120,4 +120,8 @@ public class PropertiesUtils extends LoggerUtils {
     public static String getScreenShotsFolder() {
         return getProperty("screenshotsFolder");
     }
+
+    public static String getImagesFolder() {
+        return getProperty("imagesFolder");
+    }
 }

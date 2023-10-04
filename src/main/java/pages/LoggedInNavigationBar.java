@@ -155,6 +155,34 @@ abstract public class LoggedInNavigationBar extends BasePageClass {
         return practicePage.verifyPracticePage();
     }
 
+    public boolean isProfileTabDisplayed() {
+        log.debug("isProfileTabDisplayed()");
+        return isWebElementDisplayed(profileTabLocator);
+    }
+
+    public boolean isProfileTabEnabled() {
+        log.debug("isProfileTabEnabled()");
+        Assert.assertTrue(isProfileTabDisplayed(), "Profile Tab is NOT displayed on Navigation Bar!");
+        WebElement profileTab = getWebElement(profileTabLocator);
+        return isWebElementEnabled(profileTab);
+    }
+
+    public String getProfileTabTitle() {
+        log.debug("getProfileTabTitle()");
+        Assert.assertTrue(isProfileTabDisplayed(), "Profile Tab is NOT displayed on Navigation Bar!");
+        WebElement profileTab = getWebElement(profileTabLocator);
+        return getTextFromWebElement(profileTab);
+    }
+
+    public ProfilePage clickProfileTab() {
+        log.debug("clickProfileTab()");
+        Assert.assertTrue(isProfileTabEnabled(), "Profile Tab is NOT enabled on Navigation Bar!");
+        WebElement profileTab = getWebElement(profileTabLocator);
+        clickOnWebElement(profileTab);
+        ProfilePage profilePage = new ProfilePage(driver);
+        return profilePage.verifyProfilePage();
+    }
+
     public boolean isLogOutLinkDisplayed() {
         log.debug("isLogOutLinkDisplayed()");
         return isWebElementDisplayed(logoutLinkLocator);

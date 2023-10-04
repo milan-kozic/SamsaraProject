@@ -23,7 +23,7 @@ public class PracticePage extends LoggedInNavigationBar {
     }
 
     public PracticePage open(boolean bVerify) {
-        log.debug("openAdminPage(" + PRACTICE_PAGE_URL + ")");
+        log.debug("openPracticePage(" + PRACTICE_PAGE_URL + ")");
         openUrl(PRACTICE_PAGE_URL);
         if(bVerify) {
             verifyPracticePage();

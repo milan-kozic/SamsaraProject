@@ -18,7 +18,7 @@ public class ScreenShotUtils extends LoggerUtils {
             log.warn("ScreenShot for test '" + sTestName + "' could not be taken! Driver instance has quit!");
             return;
         }
-        String sFilePath = screenShotPath + sTestName + ".png";
+        String sFilePath = screenShotPath + sTestName + DateTimeUtils.getDateTimeStamp() + ".png";
         TakesScreenshot screenshot = (TakesScreenshot) driver;
         File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
         File dstFile = new File(sFilePath);

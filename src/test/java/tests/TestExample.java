@@ -5,10 +5,12 @@ import data.HeroClass;
 import data.Time;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 import pages.*;
 import utils.DateTimeUtils;
 import utils.ScreenShotUtils;
 
+import java.util.Date;
 import java.util.List;
 
 //@Test (groups={Groups.REGRESSION})
@@ -462,5 +464,28 @@ public class TestExample extends BaseTestClass {
             ScreenShotUtils.takeScreenShot(driver, sFileName);
             quitDriver(driver);
         }
+    }
+
+    //@Test
+    public void testDate() {
+
+
+        Date currentDate = DateTimeUtils.getCurrentDateTime();
+        log.info("DATE: " + currentDate);
+
+        String pattern = "EEEE dd-MMMM-yyyy HH:mm:ss zzzz";
+        String locale = "hr";
+        String sFormattedDate = DateTimeUtils.getFormattedDateTime(currentDate, pattern);
+        log.info("FORMATTED DATE: " + sFormattedDate);
+        String sLocalizedDate = DateTimeUtils.getLocalizedDateTime(currentDate, pattern, locale);
+        log.info("LOCALIZED DATE: " + sLocalizedDate);
+
+        String sCreatedDate = "02.10.2023. 15:52";
+        String parsePattern = "dd.MM.yyyy. HH:mm";
+
+        Date parsedDate = DateTimeUtils.getParsedDateTime(sCreatedDate, parsePattern);
+        log.info("PARSED DATE: " + parsedDate);
+
+        log.info("COMPARE DATES: " + currentDate.compareTo(parsedDate));
     }
 }

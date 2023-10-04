@@ -8,6 +8,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
@@ -46,6 +47,7 @@ public class WebDriverUtils extends LoggerUtils {
 
                     if (bRemote) {
                         RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL(sHubUrl), options);
+                        remoteDriver.setFileDetector(new LocalFileDetector());
                         driver = remoteDriver;
                     } else {
                         System.setProperty("webdriver.chrome.driver", sPathDriverChrome);
@@ -63,6 +65,7 @@ public class WebDriverUtils extends LoggerUtils {
 
                     if (bRemote) {
                         RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL(sHubUrl), options);
+                        remoteDriver.setFileDetector(new LocalFileDetector());
                         driver = remoteDriver;
                     } else {
                         System.setProperty("webdriver.gecko.driver", sPathDriverFirefox);
@@ -80,6 +83,7 @@ public class WebDriverUtils extends LoggerUtils {
 
                     if (bRemote) {
                         RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL(sHubUrl), options);
+                        remoteDriver.setFileDetector(new LocalFileDetector());
                         driver = remoteDriver;
                     } else {
                         System.setProperty("webdriver.msedge.driver", sPathDriverEdge);
