@@ -5,7 +5,9 @@ import data.Time;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
+import utils.FileUtils;
 import utils.PropertiesUtils;
 
 public class AdminPage extends LoggedInNavigationBar {
@@ -18,6 +20,9 @@ public class AdminPage extends LoggedInNavigationBar {
     private final By pageTitleLocator = By.xpath("//div[contains(@class,'panel-title')]");
     private final By allowUsersToShareRegistrationCodeCheckBoxLocator = By.id("usersAllowed");
     private final By enableSomethingCheckboxLocator = By.id("enableSomething");
+
+    @FindBy(id = "userDetails")
+    private WebElement downloadUserDetailsButton;
 
     public AdminPage(WebDriver driver) {
         super(driver);
@@ -153,5 +158,12 @@ public class AdminPage extends LoggedInNavigationBar {
         }
         AdminPage adminPage = new AdminPage(driver);
         return adminPage.verifyAdminPage();
+    }
+
+    public String downloadUserDetailsFile() {
+        log.debug("downloadUserDetailsFile()");
+        String href = getAttributeFromWebElement(downloadUserDetailsButton, "href");
+        log.debug("HREF: " + href);
+        return FileUtils.downloadTextFile(driver, href);
     }
 }

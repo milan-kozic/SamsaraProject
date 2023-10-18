@@ -3,6 +3,7 @@ package tests.login;
 import data.CommonStrings;
 import data.Groups;
 import data.Time;
+import objects.User;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestContext;
@@ -14,6 +15,7 @@ import pages.LoginPage;
 import pages.WelcomePage;
 import tests.BaseTestClass;
 import utils.DateTimeUtils;
+import utils.RestApiUtils;
 
 @Test (groups={Groups.REGRESSION, Groups.SANITY, Groups.LOGIN})
 public class SuccessfulLoginLogout extends BaseTestClass {
@@ -22,8 +24,10 @@ public class SuccessfulLoginLogout extends BaseTestClass {
 
     private WebDriver driver;
 
-    private String sUsername;
-    private String sPassword;
+    private User newUser;
+
+    private boolean bCreated = false;
+
 
     @BeforeMethod
     public void setUpTest(ITestContext testContext) {
@@ -31,8 +35,23 @@ public class SuccessfulLoginLogout extends BaseTestClass {
 
         driver = setUpDriver();
 
-        sUsername = "admin";
-        sPassword = "password";
+        newUser = User.createNewUniqueUser("LoginLogout");
+        log.info("NEW USER: " + newUser);
+
+        RestApiUtils.postUser(newUser);
+        bCreated = true;
+
+        User createdUser = RestApiUtils.getUser(newUser.getUsername());
+        log.info("CREATED USER: " + createdUser);
+
+        //ApiError error1 = RestApiUtils.getUserError("jfndksjfnkj", "admin", "password");
+        //log.info("ERROR1: " + error1);
+
+        //ApiError error2 = RestApiUtils.getUserError(newUser.getUsername(), "user", "password");
+        //log.info("ERROR2: " + error2);
+
+        //ApiError error3 = RestApiUtils.getUserError(newUser.getUsername(), "admin", "password123");
+        //log.info("ERROR3: " + error3);
     }
 
     @Test
@@ -42,25 +61,25 @@ public class SuccessfulLoginLogout extends BaseTestClass {
 
         String sExpectedSuccessMessage = CommonStrings.getLogoutSuccessMessage();
 
-            LoginPage loginPage = new LoginPage(driver).open();
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        LoginPage loginPage = new LoginPage(driver).open();
+        DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.typeUsername(sUsername);
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        loginPage.typeUsername(newUser.getUsername());
+        DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage.typePassword(sPassword);
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        loginPage.typePassword(newUser.getPassword());
+        DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            WelcomePage welcomePage = loginPage.clickLoginButton();
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        WelcomePage welcomePage = loginPage.clickLoginButton();
+        DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            loginPage = welcomePage.clickLogOutLink();
-            DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        loginPage = welcomePage.clickLogOutLink();
+        DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-            Assert.assertTrue(loginPage.isSuccessMessageDisplayed(), "Success Message is NOT displayed!");
+        Assert.assertTrue(loginPage.isSuccessMessageDisplayed(), "Success Message is NOT displayed!");
 
-            String sActualSuccessMessage = loginPage.getSuccessMessage();
-            Assert.assertEquals(sActualSuccessMessage, sExpectedSuccessMessage, "Wrong Success Message!");
+        String sActualSuccessMessage = loginPage.getSuccessMessage();
+        Assert.assertEquals(sActualSuccessMessage, sExpectedSuccessMessage, "Wrong Success Message!");
 
     }
 
@@ -68,5 +87,8 @@ public class SuccessfulLoginLogout extends BaseTestClass {
     public void tearDownTest(ITestResult testResult) {
         log.debug("[END TEST] " + sTestName);
         tearDown(driver, testResult);
+        if(bCreated) {
+            deleteUser(newUser.getUsername());
+        }
     }
 }

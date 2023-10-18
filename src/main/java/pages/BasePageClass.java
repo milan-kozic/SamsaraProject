@@ -288,6 +288,18 @@ abstract class BasePageClass extends LoggerUtils {
         return element.getAttribute(attribute);
     }
 
+    protected void setAttributeToWebElement(WebElement element, String attribute, String value) {
+        log.trace("setAttributeToWebElement(" + element + ", " + attribute + ", " + value + ")");
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].setAttribute('" + attribute + "', '" + value + "')", element);
+    }
+
+    protected void removeAttributeFromWebElement(WebElement element, String attribute) {
+        log.trace("removeAttributeFromWebElement(" + element + ", " + attribute + ")");
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].removeAttribute('" + attribute + "')", element);
+    }
+
     protected String getPlaceholderFromWebElement(WebElement element) {
         return getAttributeFromWebElement(element, "placeholder");
     }

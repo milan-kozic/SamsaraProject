@@ -3,6 +3,7 @@ package tests;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import utils.LoggerUtils;
+import utils.RestApiUtils;
 import utils.ScreenShotUtils;
 import utils.WebDriverUtils;
 
@@ -29,6 +30,14 @@ public class BaseTestClass extends LoggerUtils {
         }
         finally {
             quitDriver(driver);
+        }
+    }
+
+    protected void deleteUser(String sUsername) {
+        try {
+            RestApiUtils.deleteUser(sUsername);
+        } catch (AssertionError | Exception e) {
+            log.error("Delete User '" + sUsername + "' Failed! Message: " + e.getMessage());
         }
     }
 }

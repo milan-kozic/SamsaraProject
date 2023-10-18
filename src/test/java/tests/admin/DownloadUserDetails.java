@@ -1,4 +1,4 @@
-package tests.profile;
+package tests.admin;
 
 import data.Time;
 import org.openqa.selenium.WebDriver;
@@ -7,13 +7,13 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.AdminPage;
 import pages.LoginPage;
-import pages.ProfilePage;
 import pages.WelcomePage;
 import tests.BaseTestClass;
 import utils.DateTimeUtils;
 
-public class UploadAvatar extends BaseTestClass {
+public class DownloadUserDetails extends BaseTestClass {
 
     private final String sTestName = this.getClass().getName();
 
@@ -28,16 +28,14 @@ public class UploadAvatar extends BaseTestClass {
 
         driver = setUpDriver();
 
-        sUsername = "dedoje";
-        sPassword = "Pass123";
+        sUsername = "admin";
+        sPassword = "password";
     }
 
     @Test
-    public void testUploadAvatar() {
+    public void testDownloadUserDetails() {
 
         log.info("[START TEST] " + sTestName);
-
-        String sFileName = "dedoje.png";
 
         LoginPage loginPage = new LoginPage(driver).open();
         DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
@@ -45,13 +43,14 @@ public class UploadAvatar extends BaseTestClass {
         WelcomePage welcomePage = loginPage.login(sUsername, sPassword);
         DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-        ProfilePage profilePage = welcomePage.clickProfileTab();
+        AdminPage adminPage = welcomePage.clickAdminTab();
         DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
 
-        profilePage = profilePage.uploadProfileImage(sFileName);
+        String sFileContent = adminPage.downloadUserDetailsFile();
         DateTimeUtils.wait(Time.TIME_DEMONSTRATION);
+        log.info("FILE: \n" + sFileContent);
 
-        profilePage.clickLogOutLink();
+        adminPage.clickLogOutLink();
     }
 
     @AfterMethod(alwaysRun = true)

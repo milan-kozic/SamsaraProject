@@ -1,6 +1,7 @@
 package utils;
 
 import data.Time;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -8,12 +9,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Set;
 
 public class WebDriverUtils extends LoggerUtils {
 
@@ -45,6 +49,11 @@ public class WebDriverUtils extends LoggerUtils {
                     }
                     options.addArguments("--window-size=1600x900");
 
+                    HashMap<String, Object> prefs = new HashMap<String, Object>();
+                    prefs.put("download.default_directory", "/directory/path");
+                    prefs.put("safebrowsing.enabled", "false");
+                    options.setExperimentalOption("prefs", prefs);
+
                     if (bRemote) {
                         RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL(sHubUrl), options);
                         remoteDriver.setFileDetector(new LocalFileDetector());
@@ -62,6 +71,14 @@ public class WebDriverUtils extends LoggerUtils {
                         options.addArguments("--headless");
                     }
                     options.addArguments("--window-size=1600x900");
+
+                    FirefoxProfile profile = new FirefoxProfile();
+
+                    profile.setPreference("browser.download.folderList", 2);
+                    profile.setPreference("browser.download.dir", "downloads/directory/path");
+                    profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv,application/zip");
+
+                    options.setProfile(profile);
 
                     if (bRemote) {
                         RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL(sHubUrl), options);
@@ -123,5 +140,14 @@ public class WebDriverUtils extends LoggerUtils {
     public static void setImplicitWait(WebDriver driver, int timeout) {
         log.trace("setImplicitWait(" + driver + ")");
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
+    }
+
+    public static String getCookies(WebDriver driver) {
+        Set<Cookie> cookies = driver.manage().getCookies();
+        StringBuilder sCookies = new StringBuilder();
+        for(Cookie cookie : cookies) {
+            sCookies.append(cookie.getName()).append("=").append(cookie.getValue()).append(";");
+        }
+        return sCookies.toString();
     }
 }

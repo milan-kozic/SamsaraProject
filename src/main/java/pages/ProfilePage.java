@@ -86,12 +86,11 @@ public class ProfilePage extends LoggedInNavigationBar {
 
     public ProfilePage typeUsername(String sUsername) {
         log.debug("typeUsername(" + sUsername + ")");
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].removeAttribute('readonly')", usernameTextField);
+        removeAttributeFromWebElement(usernameTextField, "readonly");
         DateTimeUtils.wait(Time.TIME_SHORTEST);
         clearAndTypeTextToWebElement(usernameTextField, sUsername);
         DateTimeUtils.wait(Time.TIME_SHORTEST);
-        js.executeScript("arguments[0].setAttribute('readonly', 'readonly')", usernameTextField);
+        setAttributeToWebElement(usernameTextField, "readonly", "readonly");
         DateTimeUtils.wait(Time.TIME_SHORTEST);
         return this;
     }

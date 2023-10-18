@@ -124,4 +124,15 @@ public class PropertiesUtils extends LoggerUtils {
     public static String getImagesFolder() {
         return getProperty("imagesFolder");
     }
+
+    public static String getAdminUsername() {
+        return getProperty("adminUsername");
+    }
+    public static String getAdminPassword() {
+        return getProperty("adminPassword");
+    }
+
+    public static String getDefaultPassword() {
+        return getProperty("defaultPassword");
+    }
 }
